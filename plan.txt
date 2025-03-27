@@ -1,0 +1,11 @@
+Restaurant struct (main managment)
+
+    Fields:
+        Orders slice([]Order)
+        Menu map(map[string]float64)  {"foodName": price}
+        Food Quantity map(map[string]int) {"foodName": quantity}
+
+
+    Behavior:
+        -Add Order (adding order to  Orders []Order)
+        -Remove Order (removing order from the Orders slice)
