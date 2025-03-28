@@ -35,10 +35,12 @@ func LoadMenu(menuChan chan Menu, wg *sync.WaitGroup) {
 		"Fresh Orange Juice":         3.99,
 		"Mineral Water":              2.49,
 	}
+
+	close(menuChan)
 }
 
 func ReceiveFoodQuantity(foodQuantityChan chan FoodQuantity, wg *sync.WaitGroup) {
-
+	defer wg.Done()
 	fmt.Println("Loading FoodQuantity")
 
 	time.Sleep(2 * time.Second)
@@ -64,5 +66,5 @@ func ReceiveFoodQuantity(foodQuantityChan chan FoodQuantity, wg *sync.WaitGroup)
 		"Fresh Orange Juice":         15,
 		"Mineral Water":              25,
 	}
-
+	close(foodQuantityChan)
 }
