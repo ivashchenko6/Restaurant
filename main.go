@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"example.com/restaurant-proj/order"
 	"example.com/restaurant-proj/restaurant"
 	"example.com/restaurant-proj/utils"
@@ -12,18 +10,23 @@ import (
 
 func main() {
 	var wg sync.WaitGroup
-	menuChan := make(chan utils.Menu)
-	foodQuantityChan := make(chan utils.FoodQuantity)
+	menuChan := make(chan utils.Menu, 1)
+	foodQuantityChan := make(chan utils.FoodQuantity, 1)
 	wg.Add(2)
 	go utils.LoadMenu(menuChan, &wg)
 	go utils.ReceiveFoodQuantity(foodQuantityChan, &wg)
 
+	wg.Wait()
+
+	menu := <-menuChan
+	foodQuantity := <-foodQuantityChan
+
 	cheeseCakeFactory := restaurant.Restaurant{
 		RestaurantName: "Cheese Cake Factory",
 		Orders:         []order.Order{},
-		Menu:           <-menuChan,
-		FoodQuantity:   <-foodQuantityChan,
+		Menu:           menu,
+		FoodQuantity:   foodQuantity,
 	}
 
-	fmt.Println(cheeseCakeFactory)
+	cheeseCakeFactory.ShowMenu()
 }
