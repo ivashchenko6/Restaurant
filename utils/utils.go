@@ -1,9 +1,13 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"sync"
 	"time"
+
+	"example.com/restaurant-proj/table"
 )
 
 type Menu map[string]float64
@@ -67,4 +71,22 @@ func ReceiveFoodQuantity(foodQuantityChan chan FoodQuantity, wg *sync.WaitGroup)
 		"Mineral Water":              25,
 	}
 	close(foodQuantityChan)
+}
+
+func ReadMultipleWords(strPtr *string) {
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	*strPtr = scanner.Text()
+}
+
+func GetTables(tablesChan chan []table.Table, wg *sync.WaitGroup) {
+	defer wg.Done()
+	tablesChan <- []table.Table{
+		{TableID: 16, PeopleQuantity: 5, ReceiptAmount: 0, IsAvailable: false},
+		{TableID: 12, PeopleQuantity: 0, ReceiptAmount: 0, IsAvailable: true},
+		{TableID: 19, PeopleQuantity: 2, ReceiptAmount: 0, IsAvailable: false},
+		{TableID: 65, PeopleQuantity: 1, ReceiptAmount: 0, IsAvailable: false},
+	}
+
+	close(tablesChan)
 }
